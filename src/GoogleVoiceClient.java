@@ -42,6 +42,7 @@ public class GoogleVoiceClient {
 				currentNotifications.put(thread.getId(), popUp);
 			}
 		}
+		
 
 		// Add an icon to the system tray if supported
 		if (!SystemTray.isSupported()) {
