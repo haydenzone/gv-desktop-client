@@ -15,10 +15,24 @@ public class GoogleVoiceClient {
 	public static void main(String[] args) throws InterruptedException, IOException {
 		String userName = "";
 		String pass = "";
+		String userHome = System.getProperty("user.home");  
+		String file = userHome + "/.gv";
+		File f = new File(file);
+		if(f.exists()) { 
+			System.out.println("Settings file found");
+		    Scanner sc = new Scanner(f);
+		    userName = sc.nextLine();
+		    pass = sc.nextLine();
+		}
+		else {
+			System.out.println("Settings file not found at "+file);
+			// Input the userName and password
+			userName = getUsername();
+			pass = getPassword();
+		}
+			
 
-		// Input the userName and password
-		userName = getUsername();
-		pass = getPassword();
+
 		
 		//Attempt to login 
 		try {
@@ -69,7 +83,8 @@ public class GoogleVoiceClient {
 					// Check to see if a popup exists
 					if (currentNotifications.containsKey(thread.getId())) {
 						// Kill popups for this thread
-						killPopUp(thread.getId());
+						currentNotifications.get(thread.getId()).dispose();
+						removeNotifcationEntry(thread.getId());
 					}
 
 				} else { // Is unread
@@ -138,19 +153,7 @@ public class GoogleVoiceClient {
 		}
 		
 	}
-	public static void killPopUp(String threadID) {
-		currentNotifications.containsKey(threadID);
-		Notification toKill = currentNotifications.get(threadID);
-		toKill.dispose();
-
-		// Hold the threadID on the currentNotifications list for
-		//  a second to prevent an incoming SMSthreads update
-		// from recreating it.
-		try {
-			Thread.sleep(1000);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
+	public static void removeNotifcationEntry(String threadID) {
 		currentNotifications.remove(threadID);
 	}
 

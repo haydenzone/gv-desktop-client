@@ -90,7 +90,7 @@ public class Notification extends JFrame implements Runnable {
 			@Override
 			public void windowClosing(WindowEvent e) {
 				GoogleVoiceClient.markMessageAsRead(thread.getId());
-				GoogleVoiceClient.killPopUp(thread.getId());
+				GoogleVoiceClient.removeNotifcationEntry(thread.getId());
 				dispose();
 			}
 		};
@@ -124,12 +124,13 @@ public class Notification extends JFrame implements Runnable {
 			System.out.println("Sending message \"" + toSend + "\" to "
 					+ thread.getContact().getNumber());
 
-			GoogleVoiceClient.killPopUp(thread.getId());
+			this.dispose();
 			try {
 				GoogleVoiceClient.sendText(thread.getContact().getNumber(), toSend);
 			} catch (IOException ex) {
 				System.out.println(ex.getMessage());
 			}
+			GoogleVoiceClient.removeNotifcationEntry(thread.getId());
 		}
 
 	}
